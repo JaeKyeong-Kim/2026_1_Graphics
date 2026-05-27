@@ -124,9 +124,9 @@ void RenderScene(void)
         glDisable(GL_DEPTH_TEST);
 
     if (bOutline)
-        glPolygonMode(GL_BACK, GL_LINE);
+        glPolygonMode(GL_BACK, GL_LINE);   // 뒷면 삼각형만 선 모드로 바꾼다.
     else
-        glPolygonMode(GL_BACK, GL_FILL);
+        glPolygonMode(GL_BACK, GL_FILL);   // 뒷면을 다시 채워진 상태로 돌린다.
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -189,4 +189,5 @@ int main(int argc, char** argv)
  * - week17_01을 그대로 복사한 두 번째 베이스 파일이다.
  * - week18_test_01과 별개로 다른 조건을 실험할 수 있도록 분리해 둔 상태다.
  * - 기본 렌더링 구조와 입력 구조는 동일하며, 이후 수정 지점만 바꾸면 된다.
+ * - outline의 의미는 "전체 골조"가 아니라 GL_BACK 면만 line 모드로 바꾸는 것임을 주의한다.
  */

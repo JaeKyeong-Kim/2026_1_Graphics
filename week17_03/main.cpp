@@ -1,16 +1,16 @@
-#if defined(__APPLE__)
+#if defined(__APPLE__) // macOS에서는 Apple GLUT 헤더를 사용한다.
 #include <GLUT/glut.h>
 #else
-#include <GL/glut.h>
+#include <GL/glut.h>   // 그 외 환경에서는 일반 GLUT 헤더를 사용한다.
 #endif
 
-#include <cmath>
+#include <cmath>       // sin, cos 계산에 사용한다.
 
-#define GL_PI 3.14159265f
+#define GL_PI 3.14159265f // 원형 fan 계산용 PI 값이다.
 
-int gWindow = 0;
-bool bCull = true;
-bool bDepth = true;
+int gWindow = 0;       // 생성된 GLUT 창 핸들을 저장한다.
+bool bCull = true;     // 후면 제거 사용 여부다.
+bool bDepth = true;    // depth test 사용 여부다.
 
 void SetupRC(void)
 {
@@ -56,8 +56,8 @@ void RenderScene(void)
               0.0, 0.0, -1.0, // center: 카메라가 바라보는 방향
               0.0, 1.0, 0.0); // up: 화면 위쪽 기준
 
-    DrawCircle(20.0f, 10.0f, 0.0f, 0.0f, 1.0f);
-    DrawCircle(10.0f, 20.0f, 1.0f, 0.0f, 0.0f);
+    DrawCircle(20.0f, 10.0f, 0.0f, 0.0f, 1.0f); // z=10의 큰 파란 원이다.
+    DrawCircle(10.0f, 20.0f, 1.0f, 0.0f, 0.0f); // z=20의 작은 빨간 원이다.
 
     glutSwapBuffers();
 }
@@ -94,3 +94,10 @@ int main(int argc, char** argv)
     glutMainLoop();
     return 0;
 }
+
+/* [week17_03 정리]
+ * - 동일한 xy 위치에 두 원을 두고 depth test와 cull face 결과를 보는 예제다.
+ * - 현재 카메라는 -z 방향을 보므로, z=10과 z=20 원은 eye space에서 카메라 뒤쪽에 놓인다.
+ * - 그래서 좌표, lookAt 방향, glOrtho near/far 부호를 함께 해석해야 어떤 원이 보이는지 설명할 수 있다.
+ * - 이 파일은 "카메라 방향을 바꿀 때 depth와 컬링 결과가 같이 달라진다"는 점을 확인하기 위한 기준 코드다.
+ */

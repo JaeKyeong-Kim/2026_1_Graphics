@@ -124,9 +124,9 @@ void RenderScene(void)
         glDisable(GL_DEPTH_TEST);
 
     if (bOutline)
-        glPolygonMode(GL_BACK, GL_LINE);
+        glPolygonMode(GL_BACK, GL_LINE);   // 뒷면 삼각형만 선 모드로 바꾼다.
     else
-        glPolygonMode(GL_BACK, GL_FILL);
+        glPolygonMode(GL_BACK, GL_FILL);   // 뒷면을 다시 채워진 상태로 돌린다.
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -189,4 +189,5 @@ int main(int argc, char** argv)
  * - week17_01을 그대로 복사한 베이스 파일이다.
  * - 오늘 수업용 실습과 시험 변형을 위해 따로 분리한 작업 시작점이다.
  * - depth, cull, outline, 이동, 회전이 모두 이미 연결된 상태로 유지한다.
+ * - 여기서 outline은 전체 와이어프레임이 아니라 GL_BACK 면만 선 모드로 바꾸는 실험용 설정이다.
  */

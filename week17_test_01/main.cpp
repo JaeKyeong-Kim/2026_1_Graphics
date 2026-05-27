@@ -1,26 +1,26 @@
-#if defined(__APPLE__)
+#if defined(__APPLE__) // macOS에서는 Apple GLUT 헤더를 사용한다.
 #include <GLUT/glut.h>
 #else
-#include <GL/glut.h>
+#include <GL/glut.h>   // 그 외 환경에서는 일반 GLUT 헤더를 사용한다.
 #endif
 
-#include <cmath>
+#include <cmath>       // sin, cos 계산에 사용한다.
 
-#define GL_PI 3.1415f
+#define GL_PI 3.1415f  // 원형 밑면 계산용 PI 값이다.
 
-int gWindow = 0;
+int gWindow = 0;       // 생성된 GLUT 창 핸들을 저장한다.
 
-GLfloat xRot = 0.0f;
-GLfloat yRot = 0.0f;
-GLfloat xTran = 0.0f;
-GLfloat yTran = 0.0f;
-bool bCull = true;
-const GLfloat kMoveStep = 5.0f;
+GLfloat xRot = 0.0f;   // x축 회전 각도다.
+GLfloat yRot = 0.0f;   // y축 회전 각도다.
+GLfloat xTran = 0.0f;  // x축 이동량이다.
+GLfloat yTran = 0.0f;  // y축 이동량이다.
+bool bCull = true;     // 후면 제거 사용 여부다.
+const GLfloat kMoveStep = 5.0f; // 키 한 번당 이동량이다.
 
 void SetupRC(void)
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glShadeModel(GL_FLAT);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // 배경을 검은색으로 설정한다.
+    glShadeModel(GL_FLAT);                // 단색 셰이딩을 사용한다.
 }
 
 void SpecialKeyboard(int key, int x, int y)
@@ -60,7 +60,7 @@ void Keyboard(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
-void DrawConeBase(void)
+void DrawConeBase(void) // 원뿔의 밑면을 triangle fan으로 그린다.
 {
     const int sliceCount = 16;
     const float radius = 50.0f;
@@ -83,7 +83,7 @@ void DrawConeBase(void)
     glEnd();
 }
 
-void DrawConeSide(void)
+void DrawConeSide(void) // 원뿔의 옆면을 triangle fan으로 그린다.
 {
     const int sliceCount = 16;
     const float radius = 50.0f;
@@ -109,26 +109,26 @@ void DrawConeSide(void)
 
 void RenderScene(void)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);         // 색상 버퍼를 초기화한다.
 
-    if (bCull)
+    if (bCull)                            // 컬링을 켜면 뒷면은 그리지 않는다.
         glEnable(GL_CULL_FACE);
     else
-        glDisable(GL_CULL_FACE); 
+        glDisable(GL_CULL_FACE);
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);           // 모델뷰 행렬을 사용할 준비를 한다.
+    glLoadIdentity();                     // 이전 프레임의 변환을 지운다.
 
-    glPushMatrix(); 
-        glTranslatef(xTran, yTran, 0.0f);
-        glRotatef(xRot, 1.0f, 0.0f, 0.0f);
-        glRotatef(yRot, 0.0f, 1.0f, 0.0f);
+    glPushMatrix();
+        glTranslatef(xTran, yTran, 0.0f); // w/a/d/x 이동을 먼저 적용한다.
+        glRotatef(xRot, 1.0f, 0.0f, 0.0f); // 화살표 입력에 따른 x축 회전이다.
+        glRotatef(yRot, 0.0f, 1.0f, 0.0f); // 화살표 입력에 따른 y축 회전이다.
 
-        DrawConeSide();
-        DrawConeBase();
+        DrawConeSide();                    // 옆면을 먼저 그린다.
+        DrawConeBase();                    // 밑면을 이어서 그린다.
     glPopMatrix();
 
-    glutSwapBuffers();
+    glutSwapBuffers();                    // 더블 버퍼 화면을 교체한다.
 }
 
 void ChangeSize(GLsizei w, GLsizei h)
@@ -173,3 +173,10 @@ int main(int argc, char** argv)
     glutMainLoop();
     return 0;
 }
+
+/* [week17_test_01 정리]
+ * - week16_test_01에 평면 이동 기능을 더한 테스트 파일이다.
+ * - 화살표 키는 회전, w/a/d/x는 x-y 평면 이동에 사용한다.
+ * - 원뿔 색 배치는 밑면과 옆면이 반대 색으로 대응되도록 유지한다.
+ * - 컬링이 켜져 있으므로 회전 방향에 따라 보이는 면이 달라진다.
+ */

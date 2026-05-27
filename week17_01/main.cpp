@@ -16,7 +16,7 @@ GLfloat xTran = 0.0f;  // x축 이동량이다.
 GLfloat yTran = 0.0f;  // y축 이동량이다.
 bool bCull = true;     // 후면 제거 사용 여부다.
 bool bDepth = true;    // depth test 사용 여부다.
-bool bOutline = true;  // back face를 선 모드로 바꿀지 여부다.
+bool bOutline = true;  // 선 모드 사용 여부다.
 const GLfloat kMoveStep = 5.0f; // 키 한 번당 이동량이다.
 
 void SetupRC(void)
@@ -124,7 +124,7 @@ void RenderScene(void)
         glDisable(GL_DEPTH_TEST);
 
     if (bOutline)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 전체 면을 선 모드로 바꿔 골조처럼 보이게 한다.
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 각 삼각형의 경계선을 선으로만 그린다.
     else
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // 다시 채워진 면으로 되돌린다.
 
@@ -146,6 +146,8 @@ void RenderScene(void)
  * - 이 주차는 원뿔 예제에 depth test와 outline 개념을 얹는 과정이다.
  * - bCull는 후면 제거 on/off, bDepth는 깊이 비교 on/off, bOutline은 선 모드 on/off를 담당한다.
  * - glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)은 와이어프레임처럼 삼각형 경계선을 보여준다.
+ * - 즉 이 코드는 "빈 실루엣"이 아니라, triangle fan 분할선까지 보이는 선 렌더링이다.
+ * - 완전히 비어 있는 외곽 골조만 원하면 line loop나 lines로 따로 그려야 한다.
  * - 화살표 키는 회전, w/a/d/x는 평면 이동에 사용한다.
  */
 
