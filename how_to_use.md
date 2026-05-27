@@ -1,60 +1,95 @@
-# 2025_1_Graphics — 사용 방법
+# 2026_1_Graphics - Usage Guide
 
-## 환경 정보
+## Environment
 
-| 항목 | 내용 |
+| Item | Value |
 |---|---|
-| OpenGL 버전 | 4.1 (macOS 최대) |
-| 빌드 시스템 | CMake |
-| 컴파일러 | AppleClang |
-| 주요 라이브러리 | GLFW, GLEW, GLM |
+| Platform | macOS |
+| Compiler | AppleClang |
+| Build system | CMake |
+| Graphics API | Legacy OpenGL |
+| Window library | GLUT / FreeGLUT-compatible API |
 
-> macOS는 OpenGL 4.1이 최대이지만, 학부 수업 및 LearnOpenGL 튜토리얼은 3.3 기준이므로 문제없음.
+This repository uses the macOS OpenGL and GLUT frameworks directly. Deprecation warnings during build are expected for this class.
 
----
+## Project Structure
 
-## 프로젝트 구조
-
-```
-2025_1_Graphics/
-├── CMakeLists.txt       # 빌드 설정
-├── how_to_use.md        # 이 파일
-├── src/
-│   └── main.cpp         # 실제 코드 작성 위치
+```text
+2026_1_Graphics/
+├── CMakeLists.txt
+├── README.md
+├── how_to_use.md
+├── rebuild_target.sh
+├── week01/
+├── week02/
+├── ...
+├── week18_test_01/
+├── week18_test_02/
 └── build/
-    └── Graphics         # 컴파일된 실행 파일
 ```
 
----
+Each `weekXX...` directory is a separate target with its own `main.cpp` and `CMakeLists.txt`.
 
-## 개발 사이클
+## First-Time Setup
 
-### 1. 코드 작성
-`src/main.cpp` 을 VS Code에서 열어 수정한다.  
-과제마다 `src/` 아래에 파일을 추가하거나 서브폴더로 나눠도 됨 (CMake가 자동 포함).
+From the repository root:
 
-### 2. 빌드
 ```bash
-cd ~/Desktop/2025_1_Graphics/build
-cmake --build .
+cmake -S . -B build
 ```
-- 변경된 파일만 재컴파일하므로 매번 빨리 끝남
-- 최초 1회만 `cmake ..` 필요 (이미 완료됨)
 
-### 3. 실행
+This generates the build system once for all tracked week targets.
+
+## Build One Target
+
+Example:
+
 ```bash
-./Graphics
+cmake --build build --target week18_test_01 -j
 ```
 
-### 반복
+## Run One Target
+
+Example:
+
+```bash
+./build/week18_test_01/week18_test_01
 ```
-코드 수정 (VS Code) → cmake --build . → ./Graphics → 결과 확인 → 반복
+
+## Fast Build + Run
+
+The helper script below reconfigures, rebuilds, and runs one target in a single command.
+
+```bash
+./rebuild_target.sh week18_test_01
 ```
 
----
+You can also pass the executable path you usually see in `build/`.
 
-## 팁
+```bash
+./rebuild_target.sh build/week18_test_01/week18_test_01
+```
 
-- VS Code 내장 터미널(`Ctrl + \``)을 사용하면 편집기와 터미널을 전환 없이 한 화면에서 작업 가능
-- 빌드 에러는 터미널 출력에서 파일명과 줄 번호로 바로 확인 가능
-- `src/` 아래 `.cpp` 파일을 추가하면 `CMakeLists.txt` 수정 없이 자동으로 빌드에 포함됨
+## Typical Workflow
+
+```text
+Edit source -> build target -> run executable -> check result -> repeat
+```
+
+In this repository that usually means:
+
+```bash
+./rebuild_target.sh week17_03
+```
+
+or
+
+```bash
+cmake --build build --target week17_03 -j
+./build/week17_03/week17_03
+```
+
+## Important Note
+
+Saving a `main.cpp` file does not update the executable automatically.  
+The code changes only appear after rebuilding the matching target.

@@ -1,28 +1,28 @@
-#if defined(__APPLE__)
+#if defined(__APPLE__) // macOS에서는 Apple GLUT 헤더를 사용한다.
 #include <GLUT/glut.h>
 #else
-#include <GL/glut.h>
+#include <GL/glut.h>   // 그 외 환경에서는 일반 GLUT 헤더를 사용한다.
 #endif
 
-#include <cmath>
+#include <cmath>       // 삼각함수 계산에 사용한다.
 
-#define GL_PI 3.1415f
+#define GL_PI 3.1415f  // 원형 밑면과 원뿔 계산용 PI 값이다.
 
-int gWindow = 0;
+int gWindow = 0;       // 생성된 GLUT 창 핸들을 저장한다.
 
-GLfloat xRot = 0.0f;
-GLfloat yRot = 0.0f;
-GLfloat xTran = 0.0f;
-GLfloat yTran = 0.0f;
-bool bCull = true;
-bool bDepth = true;
-bool bOutline = true;
-const GLfloat kMoveStep = 5.0f;
+GLfloat xRot = 0.0f;   // x축 회전 각도다.
+GLfloat yRot = 0.0f;   // y축 회전 각도다.
+GLfloat xTran = 0.0f;  // x축 이동량이다.
+GLfloat yTran = 0.0f;  // y축 이동량이다.
+bool bCull = true;     // 후면 제거 사용 여부다.
+bool bDepth = true;    // depth test 사용 여부다.
+bool bOutline = true;  // 뒷면을 선 모드로 바꿀지 여부다.
+const GLfloat kMoveStep = 5.0f; // 키 한 번당 이동량이다.
 
 void SetupRC(void)
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glShadeModel(GL_FLAT);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // 배경을 검은색으로 설정한다.
+    glShadeModel(GL_FLAT);                // 단색 셰이딩을 사용한다.
 }
 
 void SpecialKeyboard(int key, int x, int y)
@@ -62,7 +62,7 @@ void Keyboard(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
-void DrawConeBase(void)
+void DrawConeBase(void) // 원뿔의 밑면을 triangle fan으로 그린다.
 {
     const int sliceCount = 16;
     const float radius = 50.0f;
@@ -85,7 +85,7 @@ void DrawConeBase(void)
     glEnd();
 }
 
-void DrawConeSide(void)
+void DrawConeSide(void) // 원뿔의 옆면을 triangle fan으로 그린다.
 {
     const int sliceCount = 16;
     const float radius = 50.0f;
@@ -132,11 +132,11 @@ void RenderScene(void)
     glLoadIdentity();
 
     glPushMatrix();
-        glTranslatef(xTran, yTran, 0.0f);
-        glRotatef(xRot, 1.0f, 0.0f, 0.0f);
-        glRotatef(yRot, 0.0f, 1.0f, 0.0f);
-        DrawConeSide();
-        DrawConeBase();
+        glTranslatef(xTran, yTran, 0.0f); // 평면 이동을 먼저 적용한다.
+        glRotatef(xRot, 1.0f, 0.0f, 0.0f); // x축 회전을 적용한다.
+        glRotatef(yRot, 0.0f, 1.0f, 0.0f); // y축 회전을 적용한다.
+        DrawConeSide();                    // 현재 변환 상태에서 옆면을 그린다.
+        DrawConeBase();                    // 현재 변환 상태에서 밑면을 그린다.
     glPopMatrix();
 
     glutSwapBuffers();
@@ -184,3 +184,9 @@ int main(int argc, char** argv)
     glutMainLoop();
     return 0;
 }
+
+/* [week18_test_02 정리]
+ * - week17_01을 그대로 복사한 두 번째 베이스 파일이다.
+ * - week18_test_01과 별개로 다른 조건을 실험할 수 있도록 분리해 둔 상태다.
+ * - 기본 렌더링 구조와 입력 구조는 동일하며, 이후 수정 지점만 바꾸면 된다.
+ */

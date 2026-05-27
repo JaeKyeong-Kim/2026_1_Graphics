@@ -1,28 +1,28 @@
-#if defined(__APPLE__)
+#if defined(__APPLE__) // macOS에서는 Apple GLUT 헤더를 사용한다.
 #include <GLUT/glut.h>
 #else
-#include <GL/glut.h>
+#include <GL/glut.h>   // 그 외 환경에서는 일반 GLUT 헤더를 사용한다.
 #endif
 
-#include <cmath>
+#include <cmath>       // sin, cos 계산에 사용한다.
 
-#define GL_PI 3.1415f
+#define GL_PI 3.1415f  // 원형 밑면 계산용 PI 값이다.
 
-int gWindow = 0;
+int gWindow = 0;       // 생성된 GLUT 창 핸들을 저장한다.
 
-GLfloat xRot = 0.0f;
-GLfloat yRot = 0.0f;
-GLfloat xTran = 0.0f;
-GLfloat yTran = 0.0f;
-bool bCull = true;
-bool bDepth = true;
-bool bOutline = true;
-const GLfloat kMoveStep = 5.0f;
+GLfloat xRot = 0.0f;   // x축 회전 각도다.
+GLfloat yRot = 0.0f;   // y축 회전 각도다.
+GLfloat xTran = 0.0f;  // x축 이동량이다.
+GLfloat yTran = 0.0f;  // y축 이동량이다.
+bool bCull = true;     // 후면 제거 사용 여부다.
+bool bDepth = true;    // depth test 사용 여부다.
+bool bOutline = true;  // back face를 선 모드로 바꿀지 여부다.
+const GLfloat kMoveStep = 5.0f; // 키 한 번당 이동량이다.
 
 void SetupRC(void)
 {
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glShadeModel(GL_FLAT);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // 배경색을 검은색으로 설정한다.
+    glShadeModel(GL_FLAT);                // 단색 셰이딩을 사용한다.
 }
 
 void SpecialKeyboard(int key, int x, int y)
@@ -62,7 +62,7 @@ void Keyboard(unsigned char key, int x, int y)
     glutPostRedisplay();
 }
 
-void DrawConeBase(void)
+void DrawConeBase(void) // 원뿔의 밑면을 triangle fan으로 그린다.
 {
     const int sliceCount = 16;
     const float radius = 50.0f;
@@ -85,7 +85,7 @@ void DrawConeBase(void)
     glEnd();
 }
 
-void DrawConeSide(void)
+void DrawConeSide(void) // 원뿔의 옆면을 triangle fan으로 그린다.
 {
     const int sliceCount = 16;
     const float radius = 50.0f;
@@ -124,9 +124,9 @@ void RenderScene(void)
         glDisable(GL_DEPTH_TEST);
 
     if (bOutline)
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // 전체 면을 선 모드로 바꿔 골조처럼 보이게 한다.
     else
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // 다시 채워진 면으로 되돌린다.
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -135,12 +135,19 @@ void RenderScene(void)
         glTranslatef(xTran, yTran, 0.0f);
         glRotatef(xRot, 1.0f, 0.0f, 0.0f);
         glRotatef(yRot, 0.0f, 1.0f, 0.0f);
-        DrawConeSide();
-        DrawConeBase();
+        DrawConeSide(); // 회전/이동이 적용된 상태에서 옆면을 먼저 그린다.
+        DrawConeBase(); // 같은 변환 상태에서 밑면을 그린다.
     glPopMatrix();
 
     glutSwapBuffers();
 }
+
+/* [week17_01 정리]
+ * - 이 주차는 원뿔 예제에 depth test와 outline 개념을 얹는 과정이다.
+ * - bCull는 후면 제거 on/off, bDepth는 깊이 비교 on/off, bOutline은 선 모드 on/off를 담당한다.
+ * - glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)은 와이어프레임처럼 삼각형 경계선을 보여준다.
+ * - 화살표 키는 회전, w/a/d/x는 평면 이동에 사용한다.
+ */
 
 void ChangeSize(GLsizei w, GLsizei h)
 {

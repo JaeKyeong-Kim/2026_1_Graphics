@@ -83,6 +83,13 @@ Examples:
 
 The window will stay open until you close it.
 
+## Target Naming
+
+- `weekNN_01`, `weekNN_02`: regular weekly exercises
+- `weekNN_test_01`, `weekNN_test_02`: in-class or submission-oriented variants
+
+Each target is built independently, so only the target you rebuild will reflect your latest source edits.
+
 ## Class Structure
 
 The weekly exercises generally cover:
@@ -108,6 +115,7 @@ Recent weeks focus more on:
 - macOS will show OpenGL / GLUT deprecation warnings during build. That is expected for this class setup.
 - The current codebase uses immediate mode APIs on purpose because the class is focused on foundational graphics concepts.
 - If you edit source files and run an old executable directly, your changes will not appear until you rebuild the matching target.
+- Several week folders intentionally preserve earlier class states, even when the rendering style is repetitive, because they represent separate lecture checkpoints.
 
 ## License
 
