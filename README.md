@@ -36,17 +36,6 @@ This project collects weekly OpenGL practice work for macOS. Each week is stored
 
 Each week folder contains its own `main.cpp` and local `CMakeLists.txt`.
 
-## Local-Only Files
-
-The following paths are intentionally not part of the GitHub repository:
-
-- `Notes/`
-- `test/`
-- `week00/`
-- `build/`
-- `AGENT_INSTRUCTIONS.md`
-- `CPPS.md`
-
 ## macOS Setup
 
 This repository is intended for macOS users.
