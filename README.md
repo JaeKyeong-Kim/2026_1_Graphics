@@ -2,121 +2,158 @@
 
 Course repository for the 2026 Spring Graphics class.
 
-This project collects weekly OpenGL practice work built on macOS with CMake and FreeGLUT-style APIs. Most exercises are small, self-contained programs organized by week so each folder can be built and run as an independent target.
+This project collects weekly OpenGL practice work for macOS. Each week is stored as an independent CMake target so that one exercise can be built and tested without rebuilding the entire course history.
 
-## Tech Stack
+## Overview
 
-- Language: C++17
-- Build system: CMake
-- Graphics API: Legacy OpenGL immediate mode
-- Window/input handling: GLUT / FreeGLUT-compatible API
-- Platform target: macOS
+| Item | Value |
+|---|---|
+| Language | C++17 |
+| Build system | CMake |
+| Graphics API | Legacy OpenGL immediate mode |
+| Window/input API | GLUT / FreeGLUT-compatible API |
+| Primary platform | macOS |
 
 ## Repository Layout
 
-- `week01` to `week18_*`: weekly class exercises and test variants
-- `CMakeLists.txt`: root build entry that registers all tracked week targets
-- `rebuild_target.sh`: helper script to reconfigure, rebuild, and run one target
-- `CPPS.md`: local study and class notes used while implementing exercises
+```text
+2026_1_Graphics/
+├── CMakeLists.txt
+├── README.md
+├── rebuild_target.sh
+├── week01/
+├── week02/
+├── ...
+├── week18_test_01/
+├── week18_test_02/
+└── build/
+```
 
-Local-only folders are intentionally excluded from GitHub:
+- `weekNN_01`, `weekNN_02`: regular weekly exercises
+- `weekNN_test_01`, `weekNN_test_02`: in-class or submission-oriented variants
+- `CMakeLists.txt`: root build entry for all tracked week targets
+- `rebuild_target.sh`: helper script to configure, build, and run one target
+
+Each week folder contains its own `main.cpp` and local `CMakeLists.txt`.
+
+## Local-Only Files
+
+The following paths are intentionally not part of the GitHub repository:
 
 - `Notes/`
 - `test/`
 - `week00/`
 - `build/`
+- `AGENT_INSTRUCTIONS.md`
+- `CPPS.md`
 
 ## macOS Setup
 
 This repository is intended for macOS users.
 
-### 1. Install dependencies
-
-You need:
+### Requirements
 
 - Xcode Command Line Tools
 - CMake
 - Homebrew
 
-OpenGL and GLUT are linked through macOS frameworks in the current project layout.
-
-To install CMake with Homebrew:
+Install CMake with Homebrew if needed:
 
 ```bash
 brew install cmake
 ```
 
-### 2. Configure the project
+OpenGL and GLUT are linked through the macOS frameworks used by the current project layout.
 
-From the repository root:
+## Build Workflow
+
+### 1. Configure
+
+Run this once after cloning, or again after editing `CMakeLists.txt`.
 
 ```bash
 cmake -S . -B build
 ```
 
-### 3. Build a specific week target
+### 2. Build One Target
 
 Example:
 
 ```bash
-cmake --build build --target week17_03 -j
+cmake --build build --target week18_test_01 -j
 ```
 
-### 4. Run the target
+### 3. Run One Target
 
 Example:
 
 ```bash
-./build/week17_03/week17_03
+./build/week18_test_01/week18_test_01
 ```
 
-## Faster Build + Run
+## Fast Build + Run
 
-This repository includes a helper script that runs configure, build, and execute in one step.
+Use the helper script to configure, build, and run a target in one step.
 
-Examples:
+```bash
+./rebuild_target.sh week18_test_01
+```
+
+You can also pass the executable path shown under `build/`.
+
+```bash
+./rebuild_target.sh build/week18_test_01/week18_test_01
+```
+
+The program window stays open until you close it.
+
+## Typical Workflow
+
+```text
+Edit source -> rebuild target -> run executable -> check output -> repeat
+```
+
+In practice:
 
 ```bash
 ./rebuild_target.sh week17_03
-./rebuild_target.sh build/week17_03/week17_03
 ```
 
-The window will stay open until you close it.
+or:
 
-## Target Naming
+```bash
+cmake --build build --target week17_03 -j
+./build/week17_03/week17_03
+```
 
-- `weekNN_01`, `weekNN_02`: regular weekly exercises
-- `weekNN_test_01`, `weekNN_test_02`: in-class or submission-oriented variants
+## Important Notes
 
-Each target is built independently, so only the target you rebuild will reflect your latest source edits.
+- Saving `main.cpp` does not update the executable automatically.
+- Changes appear only after rebuilding the matching target.
+- macOS will show OpenGL and GLUT deprecation warnings during build. That is expected for this class setup.
+- The codebase intentionally uses immediate mode APIs because the class focuses on foundational graphics concepts.
+- Several week folders remain in the repository even when similar code appears later, because they represent separate lecture checkpoints.
 
-## Class Structure
+## Course Topics
 
 The weekly exercises generally cover:
 
-- basic GLUT window setup
+- GLUT window setup
 - 2D primitives and viewport handling
-- orthographic projection
-- point, line, strip, and fan primitives
-- simple transformations
-- keyboard interaction
-- face culling
-- depth testing
+- Orthographic projection
+- Point, line, strip, and fan primitives
+- Basic transformations
+- Keyboard interaction
+- Face culling
+- Depth testing
 
 Recent weeks focus more on:
 
-- winding order and front/back face handling
-- triangle fan based circles and cones
-- culling and depth-test interactions
-- outline and wireframe rendering
-
-## Notes for macOS Users
-
-- macOS will show OpenGL / GLUT deprecation warnings during build. That is expected for this class setup.
-- The current codebase uses immediate mode APIs on purpose because the class is focused on foundational graphics concepts.
-- If you edit source files and run an old executable directly, your changes will not appear until you rebuild the matching target.
-- Several week folders intentionally preserve earlier class states, even when the rendering style is repetitive, because they represent separate lecture checkpoints.
+- Winding order and front/back face handling
+- Triangle-fan-based circles and cones
+- Culling and depth-test interactions
+- Outline and wireframe rendering
 
 ## License
 
-This repository uses the MIT License already attached to the GitHub repository.
+This repository uses the MIT License included in the repository.
